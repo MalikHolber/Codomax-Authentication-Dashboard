@@ -1,0 +1,23 @@
+{
+  "users": [],
+  "posts": [
+    {
+      "id": 1,
+      "title": "HTML ilə ilk addımlar",
+      "category": "HTML",
+      "author": "Aysel",
+      "authorId": 0,
+      "date": "2026-10-02",
+      "body": "HTML səhifənin skeletidir. Başlıq, paraqraf, şəkil və keçid kimi elementlər məzmunun mənasını təyin edir."
+    },
+    {
+      "id": 2,
+      "title": "CSS Grid ilə adaptiv kartlar",
+      "category": "CSS",
+      "author": "Murad",
+      "authorId": 0,
+      "date": "2026-10-09",
+      "body": "Grid ekran enindən asılı olaraq sütun sayını avtomatik dəyişə bilər. Media query yalnız incə tənzimləmə üçün qalır."
+    }
+  ]
+}
