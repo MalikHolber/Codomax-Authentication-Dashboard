@@ -94,7 +94,7 @@ function cardHTML(p){return '<article class="card"><span class="tag">'+esc(p.cat
 
 var pages={
 home:function(posts){
- return '<section class="hero"><h1>Fikirlərini yaz,<br>başqaları oxusun.</h1><p class="lead">Qeyd – sadə blog platformasıdır. Qeydiyyatdan keç, yazı hazırla və dərhal dərc et.</p>'+(S.user?'<a class="btn" href="#create">Yeni yazı yaz</a>':'<a class="btn" href="#register">Başla</a> <a class="btn ghost" href="#login">Daxil ol</a>')+'</section><h2>Son yazılar</h2><div class="grid">'+posts.map(cardHTML).join("")+'</div>'
+ return '<section class="hero"><h1>Fikirlərini yaz,<br>başqaları oxusun.</h1><p class="lead">Qeyd – sadə blog platformasıdır. Qeydiyyatdan keç, yazı hazırla və dərhal dərc et.</p>'+(S.user?'<a class="btn" href="#create">Yeni yazı yaz</a>':'<a class="btn" href="#register">Başla</a> <a class="btn ghost" href="#login">Daxil ol</a>')+'</section><h2>Son yazılar</h2>'+(posts.length?'<div class="grid">'+posts.map(cardHTML).join("")+'</div>':'<p class="empty">Hələ yazı yoxdur. İlk yazını sən yaz.</p>')
 },
 login:function(){
  return '<div class="panel"><h2>Daxil ol</h2><form id="f" novalidate><label for="e">E-poçt</label><input id="e" type="email" autocomplete="email"><label for="p">Şifrə</label><input id="p" type="password" autocomplete="current-password"><div class="msg" id="m" role="alert"></div><button type="submit" style="width:100%">Daxil ol</button></form><p style="font-size:16px">Hesabın yoxdur? <a href="#register">Qeydiyyatdan keç</a></p></div>'
@@ -111,7 +111,8 @@ create:function(){
  return '<div class="panel wide"><h2>Yeni yazı</h2><form id="f" novalidate><label for="t">Başlıq</label><input id="t"><label for="c">Kateqoriya</label><select id="c"><option>HTML</option><option>CSS</option><option>JavaScript</option><option>Digər</option></select><label for="b">Məzmun</label><textarea id="b"></textarea><div class="msg" id="m" role="alert"></div><button type="submit">Dərc et</button> <a class="btn ghost" href="#dashboard">Ləğv et</a></form></div>'
 },
 post:function(p){
- return '<article class="read"><span class="tag">'+esc(p.category)+'</span><h1 style="font-size:clamp(30px,5vw,46px);margin-top:10px">'+esc(p.title)+'</h1><div class="meta" style="margin-bottom:24px">'+esc(p.author)+' · '+p.date+'</div><p>'+esc(p.body)+'</p><a class="btn ghost" href="#home">← Geri</a></article>'
+ var own=S.user&&S.user.id===p.authorId,mins=Math.max(1,Math.round(p.body.split(/\s+/).length/200));
+ return '<article class="read"><span class="tag">'+esc(p.category)+'</span><h1 style="font-size:clamp(30px,5vw,46px);margin-top:10px">'+esc(p.title)+'</h1><div class="meta" style="margin-bottom:24px">'+esc(p.author)+' · '+p.date+' · '+mins+' dəq oxuma</div><p>'+esc(p.body)+'</p><div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:24px"><a class="btn ghost" href="#home">← Bütün yazılar</a>'+(own?'<button class="danger" data-del="'+p.id+'">Yazını sil</button>':'')+'</div></article>'
 }};
 
 function bind(page){
@@ -126,7 +127,7 @@ function bind(page){
   }catch(e){m.textContent=e.message;btn.disabled=false}
  };
  document.querySelectorAll("[data-del]").forEach(function(b){b.onclick=async function(){
-  try{await api("/posts/"+b.dataset.del,{method:"DELETE"});toast("Silindi");render()}catch(e){toast(e.message)}}})
+  try{await api("/posts/"+b.dataset.del,{method:"DELETE"});toast("Silindi");if(page==="post")go("dashboard");else render()}catch(e){toast(e.message)}}})
 }
 
 async function render(){
